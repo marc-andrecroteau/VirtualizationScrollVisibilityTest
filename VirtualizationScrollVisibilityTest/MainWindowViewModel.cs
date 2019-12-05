@@ -1,18 +1,12 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Windows.Data;
-using AlphaChiTech.Virtualization;
 
 namespace VirtualizationScrollVisibilityTest
 {
-    public class MainWindowViewModel: INotifyPropertyChanged
+    public class MainWindowViewModel
     {
 
         #region Fields
-
-        private VirtualizingObservableCollection<ObjectTestViewModel> _ObjectTestHeightVirtualizingObservableCollection;
-        private VirtualizingObservableCollection<ObjectTestViewModel> _ObjectTestVirtualizingObservableCollection;
 
         #endregion
 
@@ -33,7 +27,6 @@ namespace VirtualizationScrollVisibilityTest
 
         private ICollectionView _ObjectTestHeightCollectionView;
         public ICollectionView ObjectTestHeightCollectionView
-
         {
             get
             {
@@ -57,32 +50,16 @@ namespace VirtualizationScrollVisibilityTest
         private void CreateObjectTestCollectionView()
         {
             var dataSource = new RemoteOrDbDataSourceEmulation(100, false);
-            var modelProvider = new ObjectsTestViewModelProvider(dataSource);
-            _ObjectTestVirtualizingObservableCollection = new VirtualizingObservableCollection<ObjectTestViewModel>(
-                new PaginationManager<ObjectTestViewModel>(modelProvider, pageSize: 10));
-
-            _ObjectTestCollectionView = CollectionViewSource.GetDefaultView(_ObjectTestVirtualizingObservableCollection);
+            _ObjectTestCollectionView = CollectionViewSource.GetDefaultView(dataSource);
         }
 
         private void CreateObjectTestHeightCollectionView()
         {
             var dataSource = new RemoteOrDbDataSourceEmulation(100, true);
-            var modelProvider = new ObjectsTestViewModelProvider(dataSource);
-            _ObjectTestHeightVirtualizingObservableCollection = new VirtualizingObservableCollection<ObjectTestViewModel>(
-                new PaginationManager<ObjectTestViewModel>(modelProvider, pageSize: 10));
-
-            _ObjectTestHeightCollectionView = CollectionViewSource.GetDefaultView(_ObjectTestHeightVirtualizingObservableCollection);
+            _ObjectTestHeightCollectionView = CollectionViewSource.GetDefaultView(dataSource);
         }
 
         #endregion
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void RaisePropertyChangedEvent(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }
